@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"djianhua.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="代理模式：控制访问的设计模式什么是代理模式？代理模式是一种常见的设计模式，它允许通过代理对象来控制对真实对象的访问。代理模式的主要目的是在不改变原始对象的情况下，提供额外的功能或控制访问。 为什么要使用代理模式？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代理模式：控制访问的设计模式">
+<meta property="og:url" content="https://djianhua.top/2022/10/09/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Hua&#39;s blog">
+<meta property="og:description" content="代理模式：控制访问的设计模式什么是代理模式？代理模式是一种常见的设计模式，它允许通过代理对象来控制对真实对象的访问。代理模式的主要目的是在不改变原始对象的情况下，提供额外的功能或控制访问。 为什么要使用代理模式？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308181519688.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308181521216.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308181522117.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308181523720.png">
+<meta property="article:published_time" content="2022-10-09T14:16:20.000Z">
+<meta property="article:modified_time" content="2023-08-18T07:24:28.000Z">
+<meta property="article:author" content="hua">
+<meta property="article:tag" content="设计模式">
+<meta property="article:tag" content="代理模式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308181519688.png">
+
+<link rel="canonical" href="https://djianhua.top/2022/10/09/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>代理模式：控制访问的设计模式 | Hua's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hua's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-project">
+
+    <a href="/project/" rel="section"><i class="fa fa-sitemap fa-fw"></i>project</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://djianhua.top/2022/10/09/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/./avatar/avatar.png">
+      <meta itemprop="name" content="hua">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hua's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          代理模式：控制访问的设计模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-09 22:16:20" itemprop="dateCreated datePublished" datetime="2022-10-09T22:16:20+08:00">2022-10-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-08-18 15:24:28" itemprop="dateModified" datetime="2023-08-18T15:24:28+08:00">2023-08-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="代理模式：控制访问的设计模式"><a href="#代理模式：控制访问的设计模式" class="headerlink" title="代理模式：控制访问的设计模式"></a>代理模式：控制访问的设计模式</h1><h2 id="什么是代理模式？"><a href="#什么是代理模式？" class="headerlink" title="什么是代理模式？"></a>什么是代理模式？</h2><p><code>代理模式是一种常见的设计模式，它允许通过代理对象来控制对真实对象的访问。代理模式的主要目的是在不改变原始对象的情况下，提供额外的功能或控制访问。</code></p>
+<h2 id="为什么要使用代理模式？"><a href="#为什么要使用代理模式？" class="headerlink" title="为什么要使用代理模式？"></a>为什么要使用代理模式？</h2><span id="more"></span>
+<p>代理模式有以下几个主要的应用场景：</p>
+<ul>
+<li><code>访问控制</code>：代理模式可以限制对真实对象的直接访问，只有通过代理对象才能访问真实对象。这样可以实现对真实对象的访问控制，例如权限验证、身份验证等。</li>
+<li><code>增加额外功能</code>：代理模式可以在不修改真实对象的情况下，为其增加额外的功能。代理对象可以在调用真实对象的方法前后执行一些额外的操作，例如日志记录、性能监控、缓存等。</li>
+<li><code>远程访问</code>：代理模式可以实现远程访问，即通过代理对象访问位于不同地址空间的真实对象。这对于分布式系统或跨网络的应用程序非常有用。</li>
+</ul>
+<h2 id="代理模式的两种分类"><a href="#代理模式的两种分类" class="headerlink" title="代理模式的两种分类"></a>代理模式的两种分类</h2><h3 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h3><p>静态代理是在<code>编译时就已经确定代理对象和真实对象的关系</code>。代理对象和真实对象实现相同的接口或继承相同的父类，代理对象持有真实对象的引用，并在调用真实对象的方法前后执行一些额外的操作。</p>
+<p><strong>优点：</strong> 简单易懂</p>
+<p><strong>缺点：</strong> <code>需要为每个真实对象编写一个代理类</code>，当真实对象较多时，会导致代码冗余</p>
+<p><strong>案例：</strong> 一个简单的日志记录功能</p>
+<p>假设我们有一个 UserService 接口和一个实现类 UserServiceImpl，它提供了用户管理的一些基本操作方法，如添加用户、删除用户等。现在我们需要在每个方法执行前后记录日志，例如：在方法执行前，打印 “Before” 的日志；在方法执行后，打印 “After” 的日志。<br><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308181519688.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// UserService 接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">addUser</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">deleteUser</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现类 UserServiceImpl</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addUser</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;添加用户...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteUser</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;删除用户...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 静态代理类</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceProxy</span> <span class="keyword">implements</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UserServiceProxy</span><span class="params">(UserService userService)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.userService = userService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addUser</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Before...&quot;</span>);</span><br><span class="line">        userService.addUser();</span><br><span class="line">        System.out.println(<span class="string">&quot;After...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteUser</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Before...&quot;</span>);</span><br><span class="line">        userService.deleteUser();</span><br><span class="line">        System.out.println(<span class="string">&quot;After...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 其他方法同样的方式实现</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>接下来，我们可以使用代理类来代替真实对象进行操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Client</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 静态代理</span></span><br><span class="line">        <span class="type">UserServiceProxy</span> <span class="variable">proxy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UserServiceProxy</span>(<span class="keyword">new</span> <span class="title class_">UserServiceImpl</span>());</span><br><span class="line">        proxy.addUser();</span><br><span class="line">        System.out.println(<span class="string">&quot;------------------&quot;</span>);</span><br><span class="line">        proxy.deleteUser();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>结果：</strong><br><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308181521216.png" alt="在这里插入图片描述"></p>
+<h3 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h3><p>动态代理是一种在<code>运行时动态生成代理类</code>的代理模式。它可以在不修改原始类的情况下，为原始类提供额外的功能或控制访问。在Java中，有两种常见的动态代理方式：<code>JDK动态代理和CGLIB动态代理</code></p>
+<h4 id="JDK动态代理"><a href="#JDK动态代理" class="headerlink" title="JDK动态代理"></a>JDK动态代理</h4><p>JDK动态代理是通过<code>Java的反射机制</code>实现的。它要求<code>被代理的类必须实现一个接口</code>。JDK动态代理提供了一个<code>Proxy</code>类和一个<code>InvocationHandler</code>接口，通过这两个类可以动态生成代理类。</p>
+<p><strong>案例：</strong> 简单的日志记录功能</p>
+<p>定义一个接口 <code>UserService</code>，它提供了用户管理的一些基本操作方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">addUser</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">deleteUser</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>真实的用户服务类<code>UserServiceImpl</code>，它实现了 <code>UserService</code> 接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addUser</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;添加用户...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteUser</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;删除用户...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>通过Proxy类，创建代理对象UserServiceProxy对目标对象的方法进行拦截和增强</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceProxy</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Object target;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UserServiceProxy</span><span class="params">(Object target)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.target = target;</span><br><span class="line">    &#125;</span><br><span class="line">	 <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * target：目标对象，即要被代理的对象。</span></span><br><span class="line"><span class="comment">     * getProxyInstance()：该方法返回一个代理对象，该代理对象实现了目标对象所实现的接口，并在方法调用前后执行额外的逻辑。</span></span><br><span class="line"><span class="comment">     * Proxy.newProxyInstance()：这是Java提供的创建代理对象的方法。它接受三个参数：类加载器、目标对象实现的接口数组和一个InvocationHandler对象。</span></span><br><span class="line"><span class="comment">     * InvocationHandler：这是一个接口，用于定义代理对象的方法调用处理逻辑。在invoke()方法中，我们可以在目标方法调用前后执行额外的逻辑。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span>  Object <span class="title function_">getProxyInstance</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(target.getClass().getClassLoader(),</span><br><span class="line">                target.getClass().getInterfaces(),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">InvocationHandler</span>() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">                        System.out.println(gdk代理模式---开始);</span><br><span class="line">                        <span class="type">Object</span> <span class="variable">invoke</span> <span class="operator">=</span> method.invoke(target, args);</span><br><span class="line">                        System.out.println(gdk代理模式---结束);</span><br><span class="line">                        <span class="keyword">return</span> invoke;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后，我们可以使用 <code>Proxy</code> 类的 <code>newProxyInstance</code> 方法来创建代理对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Client</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// JDK动态代理</span></span><br><span class="line">        <span class="type">UserService</span> <span class="variable">proxy</span> <span class="operator">=</span> (UserService) <span class="keyword">new</span> <span class="title class_">UserServiceProxy</span>(<span class="keyword">new</span> <span class="title class_">UserServiceImpl</span>()).getProxyInstance();</span><br><span class="line">        proxy.addUser();</span><br><span class="line">        System.out.println(<span class="string">&quot;-----------------&quot;</span>);</span><br><span class="line">        proxy.deleteUser();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308181522117.png" alt="在这里插入图片描述"></p>
+<h4 id="CGLIB动态代理"><a href="#CGLIB动态代理" class="headerlink" title="CGLIB动态代理"></a>CGLIB动态代理</h4><p>CGLIB动态代理是通过<code>继承被代理类来实现</code>的，它不要求被代理的类实现接口。CGLIB动态代理使用了字节码生成库来生成代理类。</p>
+<p><strong>案例：简单的日志记录功能</strong></p>
+<p>定义一个类 <code>UserService</code>，它提供了用户管理的一些基本操作方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">addUser</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">deleteUser</span><span class="params">()</span>;</span><br><span class="line">    <span class="comment">// 带返回结果</span></span><br><span class="line">    <span class="type">int</span> <span class="title function_">getUserCount</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>真实的用户服务类<code>UserServiceImpl</code>，它实现了 <code>UserService</code> 接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addUser</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;添加用户...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteUser</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;删除用户...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"> 	<span class="comment">// 带返回结果</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getUserCount</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;查询用户数量...&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">66</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个代理类 <code>UserServiceProxy </code>，它实现了<code>MethodInterceptor</code> 接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceProxy</span> <span class="keyword">implements</span> <span class="title class_">MethodInterceptor</span> &#123;</span><br><span class="line">    <span class="comment">// 维护一个目标对象</span></span><br><span class="line">    <span class="keyword">private</span> Object target;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造器，传入一个被代理的对象</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UserServiceProxy</span><span class="params">(Object target)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.target = target;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回一个代理对象，target的代理对象</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getProxyInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 1. 创建一个工具类</span></span><br><span class="line">        <span class="type">Enhancer</span> <span class="variable">enhancer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Enhancer</span>();</span><br><span class="line">        <span class="comment">// 2. 设置父类</span></span><br><span class="line">        enhancer.setSuperclass(target.getClass());</span><br><span class="line">        <span class="comment">// 3. 设置回调函数</span></span><br><span class="line">        enhancer.setCallback(<span class="built_in">this</span>);</span><br><span class="line">        <span class="comment">// 4. 创建子类对象，即代理对象</span></span><br><span class="line">        <span class="keyword">return</span> enhancer.create();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 重写 intercept 方法，会调用目标对象的方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">intercept</span><span class="params">(Object o, Method method, Object[] objects, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;cglib代理模式---开始&quot;</span>);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">returnVal</span> <span class="operator">=</span> method.invoke(target, objects);</span><br><span class="line">        System.out.println(<span class="string">&quot;cglib代理模式---结束&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> returnVal;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后，我们可以使用<code>UserServiceProxy</code>的<code>getProxyInstance方法</code>创建代理对象实例，调用方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 创建目标对象</span></span><br><span class="line">        <span class="type">UserService</span> <span class="variable">userService</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UserServiceImpl</span>();</span><br><span class="line">        <span class="comment">// 获取代理对象，并将目标对象传递到代理对象</span></span><br><span class="line">        <span class="type">UserService</span> <span class="variable">proxyInstance</span> <span class="operator">=</span> (UserService) <span class="keyword">new</span> <span class="title class_">UserServiceProxy</span>(userService).getProxyInstance();</span><br><span class="line">        <span class="comment">// 执行代理对象的方法，触发intecept方法，从而实现目标对象的调用</span></span><br><span class="line">        proxyInstance.addUser();</span><br><span class="line">        System.out.println(<span class="string">&quot;-------------&quot;</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">userCount</span> <span class="operator">=</span> proxyInstance.getUserCount();</span><br><span class="line">        System.out.println(userCount);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308181523720.png" alt="在这里插入图片描述"></p>
+<h5 id="jdk动态代理和cglib动态代理的区别"><a href="#jdk动态代理和cglib动态代理的区别" class="headerlink" title="jdk动态代理和cglib动态代理的区别"></a>jdk动态代理和cglib动态代理的区别</h5><ol>
+<li>实现方式：jdk动态代理是通过<code>反射</code>实现的，而cglib动态代理是通过<code>继承目标类</code>来实现的。</li>
+<li>目标类限制：jdk动态代理要求目标类<code>必须要实现接口</code>，而cglib动态代理则没有这个限制。</li>
+<li>性能：jdk动态代理相对于cglib动态代理来说，因为实现方式不同，<code>生成的代理类的效率会低一些</code>。</li>
+<li>对象类型：jdk动态代理<code>只能代理实现了接口的类</code>，cglib通过继承实现，<code>不能代理 final 类</code>。</li>
+<li>依赖库：jdk动态代理是Java自带的库，不需要额外的依赖，而<code>cglib动态代理需要依赖cglib库</code>。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>代理模式是一种非常有用的设计模式，它可以实现访问控制、增加额外功能和远程访问。静态代理在编译时确定代理对象和真实对象的关系，而动态代理在运行时动态生成代理对象。动态代理又分为jdk动态代理和cglib动态代理，分别基于接口和类来实现代理功能。根据具体的需求和场景，选择适合的代理模式可以提高代码的可维护性和灵活性。<br><strong>区别：</strong></p>
+<ul>
+<li><strong>与适配器模式的区别</strong>：<code>适配器模式主要改变所考虑对象的接口，而代理模式不能改变所代理类的接口。</code></li>
+<li><strong>与装饰器模式的区别</strong>：<code>装饰器模式为了增强功能，而代理模式是为了加以控制。</code></li>
+</ul>
+<hr>
+<p><a target="_blank" rel="noopener" href="http://t.csdn.cn/8fK1X">学习更多设计模式</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/./reward/wechat.png" alt="hua 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/reward/alipay.png" alt="hua 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+               <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag"> <i class="fa fa-tag"></i> 设计模式</a>
+               <a href="/tags/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" rel="tag"> <i class="fa fa-tag"></i> 代理模式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/10/09/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" rel="prev" title="模板方法模式：优化代码复用与扩展性的设计模式">
+      <i class="fa fa-chevron-left"></i> 模板方法模式：优化代码复用与扩展性的设计模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/11/01/%E9%97%A8%E9%9D%A2%E6%A8%A1%E5%BC%8F/" rel="next" title="门面模式：简化复杂系统的接口调用">
+      门面模式：简化复杂系统的接口调用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F%EF%BC%9A%E6%8E%A7%E5%88%B6%E8%AE%BF%E9%97%AE%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-text">代理模式：控制访问的设计模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F%EF%BC%9F"><span class="nav-text">什么是代理模式？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F%EF%BC%9F"><span class="nav-text">为什么要使用代理模式？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%88%86%E7%B1%BB"><span class="nav-text">代理模式的两种分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86"><span class="nav-text">静态代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="nav-text">动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JDK%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="nav-text">JDK动态代理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CGLIB%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="nav-text">CGLIB动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#jdk%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%92%8Ccglib%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">jdk动态代理和cglib动态代理的区别</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="hua"
+      src="/./avatar/avatar.png">
+  <p class="site-author-name" itemprop="name">hua</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+      <!-- 标签云 -->
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width:100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ArrayList/" rel="tag">ArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ConcurrentHashMap/" rel="tag">ConcurrentHashMap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java%E9%9B%86%E5%90%88/" rel="tag">Java集合</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedList/" rel="tag">LinkedList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bug/" rel="tag">bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" rel="tag">代理模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" rel="tag">单例模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%91%BD%E4%BB%A4/" rel="tag">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" rel="tag">工厂模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" rel="tag">模板方法模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" rel="tag">策略模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/" rel="tag">装饰者模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" rel="tag">适配器模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%97%A8%E9%9D%A2%E6%A8%A1%E5%BC%8F/" rel="tag">门面模式</a><span class="tag-list-count">1</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2023016272号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hua</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

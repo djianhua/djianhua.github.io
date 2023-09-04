@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"djianhua.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="华API接口平台本来想部署在服务器上，结果将环境搭好后，发现后端5个服务只能运行一、两个，nacos时不时自动挂掉，然后查nacos运行日志，没没有发现异常日志，后来发现原来是内存不够，飙到99%了，无奈，一看时间，居然凌晨三点了，一晚上白干了。呜呜呜，明天继续… 项目介绍华API接口调用平台 初衷是尽可能地帮助和服务更多的用户和开发者， 为开发者提供API接口，提高开发者开发效率的平台。我们可以">
+<meta property="og:type" content="website">
+<meta property="og:title" content="项目演示">
+<meta property="og:url" content="https://djianhua.top/project/index.html">
+<meta property="og:site_name" content="Hua&#39;s blog">
+<meta property="og:description" content="华API接口平台本来想部署在服务器上，结果将环境搭好后，发现后端5个服务只能运行一、两个，nacos时不时自动挂掉，然后查nacos运行日志，没没有发现异常日志，后来发现原来是内存不够，飙到99%了，无奈，一看时间，居然凌晨三点了，一晚上白干了。呜呜呜，明天继续… 项目介绍华API接口调用平台 初衷是尽可能地帮助和服务更多的用户和开发者， 为开发者提供API接口，提高开发者开发效率的平台。我们可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212217090.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212217663.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212218171.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212230647.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212234614.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212239152.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212239152.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212235035.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212236630.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212243550.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212236120.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212240246.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212241753.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212242295.png">
+<meta property="article:published_time" content="2023-04-05T09:13:00.000Z">
+<meta property="article:modified_time" content="2023-09-04T09:02:24.000Z">
+<meta property="article:author" content="hua">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212217090.png">
+
+<link rel="canonical" href="https://djianhua.top/project/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>项目演示 | Hua's blog
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hua's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-project">
+
+    <a href="/project/" rel="section"><i class="fa fa-sitemap fa-fw"></i>project</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="zh-CN">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">项目演示
+</h1>
+
+<div class="post-meta">
+  
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <h2 id="华API接口平台"><a href="#华API接口平台" class="headerlink" title="华API接口平台"></a>华API接口平台</h2><p>本来想部署在服务器上，结果将环境搭好后，发现后端5个服务只能运行一、两个，nacos时不时自动挂掉，然后查nacos运行日志，没没有发现异常日志，后来发现原来是内存不够，飙到99%了，无奈，一看时间，居然凌晨三点了，一晚上白干了。呜呜呜，明天继续…</p>
+<h3 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h3><p>华API接口调用平台 初衷是尽可能地帮助和服务更多的用户和开发者， 为开发者提供API接口，提高开发者开发效率的平台。我们可以为用户提供各种类型的接口服务，使他们能够更高效地完成需求，例如：获取今日天气、获取金句、随机头像等服务。</p>
+<p>项目后端使用语言为Java，包括现在市面上主流技术栈，采用微服务架构开发，解耦业务模块，前端使用React，Ant Design Pro + Ant Design组件库，使用现成组件库快速开发项目。</p>
+<h3 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h3><p>本人大学牲一枚，作为一个菜鸡程序员，身边的前端朋友也常来问我是否可以开发一些接口可以供他们调用，或是自己难免在开发中会遇到一些简单地想法，但是可能又要花费不少时间去实现，于是乎自然就会想到有没有一些现成的API可以调用。</p>
+<p>在搜罗了大多API网站后，发现有的接口质量参差不齐，或是收费不合理，或是速度慢，或是不符合预期，在获取之前有可能还需要进行关注公众号等操作，甚是繁琐，虽然知道有些操作合理的，但却让我萌生了一个自己写一个接口平台的想法，于是该项目诞生了。</p>
+<p>在开发者注册后，只需要找到需要的接口，获取接口后，使用我们提供的SDK配置密钥后就可以很方便地调用我们为您提供的服务！</p>
+<h3 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h3><h4 id="前端技术栈"><a href="#前端技术栈" class="headerlink" title="前端技术栈"></a>前端技术栈</h4><p>开发框架：React、Umi<br>脚手架：Ant Design Pro<br>组件库：Ant Design、Ant Design Components<br>语法扩展：TypeScript、Less<br>打包工具：Webpack<br>代码规范：ESLint、StyleLint、Prettier</p>
+<h4 id="后端技术栈"><a href="#后端技术栈" class="headerlink" title="后端技术栈"></a>后端技术栈</h4><p>主语言：Java<br>框架：SpringBoot 2.7.0、Mybatis-plus、Spring Cloud<br>数据库：Mysql8.0、Redis<br>中间件：RabbitMq、Elasticsearch<br>注册中心：Nacos<br>服务调用：Dubbo<br>网关：Spring Cloud Gateway</p>
+<h3 id="项目模块功能介绍"><a href="#项目模块功能介绍" class="headerlink" title="项目模块功能介绍"></a>项目模块功能介绍</h3><p>huaapi-frontend：为项目前端<br>huaapi-backend：后端服务，提供用户、接口等基本操作<br>huaapi-third-party：第三方服务，包含阿里云oss、支付宝沙箱支付、腾讯短信服务、QQ邮箱服务<br>huaapi-common：项目公共模块，包含一些公用的实体类，远程调用接口<br>huaapi-gateway：api网关，整个后端的入口，作服务转发、用户鉴权、统一日志、服务接口调用计数<br>huaapi-interface：提供的接口服务。<br>huaapi-order：订单服务，提供对订单的操作<br>huaapi-client-sdk：提供给开发者的SDK<br>huaapi-config：配置文件（配置到nacos）</p>
+<h3 id="项目展示"><a href="#项目展示" class="headerlink" title="项目展示"></a>项目展示</h3><h4 id="登录注册"><a href="#登录注册" class="headerlink" title="登录注册"></a>登录注册</h4><p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212217090.png"><br><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212217663.png"></p>
+<h4 id="主页"><a href="#主页" class="headerlink" title="主页"></a>主页</h4><p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212218171.png"></p>
+<h4 id="接口详情、接口购买-获取、接口调用"><a href="#接口详情、接口购买-获取、接口调用" class="headerlink" title="接口详情、接口购买&#x2F;获取、接口调用"></a>接口详情、接口购买&#x2F;获取、接口调用</h4><p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212230647.png"><br><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212234614.png"><br><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212239152.png"></p>
+<h4 id="接口搜索（站内-站外）-高亮显示"><a href="#接口搜索（站内-站外）-高亮显示" class="headerlink" title="接口搜索（站内&#x2F;站外）- 高亮显示"></a>接口搜索（站内&#x2F;站外）- 高亮显示</h4><p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212239152.png"><br><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212235035.png"><br><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212236630.png"></p>
+<h4 id="订单"><a href="#订单" class="headerlink" title="订单"></a>订单</h4><p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212243550.png"></p>
+<h4 id="管理页"><a href="#管理页" class="headerlink" title="管理页"></a>管理页</h4><h5 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h5><p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212236120.png"></p>
+<h5 id="接口管理"><a href="#接口管理" class="headerlink" title="接口管理"></a>接口管理</h5><p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212240246.png"></p>
+<h5 id="接口分析"><a href="#接口分析" class="headerlink" title="接口分析"></a>接口分析</h5><p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212241753.png"></p>
+<h5 id="个人中心"><a href="#个人中心" class="headerlink" title="个人中心"></a>个人中心</h5><p><img src="https://cdn.jsdelivr.net/gh/djianhua/blog-img/PicGo/my-blog/202308212242295.png"></p>
+
+      </div>
+      
+      
+      
+    </div>
+    
+
+    
+    
+    
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8EAPI%E6%8E%A5%E5%8F%A3%E5%B9%B3%E5%8F%B0"><span class="nav-text">华API接口平台</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D"><span class="nav-text">项目介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF"><span class="nav-text">项目背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E6%A0%88"><span class="nav-text">技术栈</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%E6%A0%88"><span class="nav-text">前端技术栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E6%8A%80%E6%9C%AF%E6%A0%88"><span class="nav-text">后端技术栈</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D"><span class="nav-text">项目模块功能介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%B1%95%E7%A4%BA"><span class="nav-text">项目展示</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C"><span class="nav-text">登录注册</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E9%A1%B5"><span class="nav-text">主页</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E8%AF%A6%E6%83%85%E3%80%81%E6%8E%A5%E5%8F%A3%E8%B4%AD%E4%B9%B0-%E8%8E%B7%E5%8F%96%E3%80%81%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8"><span class="nav-text">接口详情、接口购买&#x2F;获取、接口调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E6%90%9C%E7%B4%A2%EF%BC%88%E7%AB%99%E5%86%85-%E7%AB%99%E5%A4%96%EF%BC%89-%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA"><span class="nav-text">接口搜索（站内&#x2F;站外）- 高亮显示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A2%E5%8D%95"><span class="nav-text">订单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E9%A1%B5"><span class="nav-text">管理页</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-text">用户管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86"><span class="nav-text">接口管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E5%88%86%E6%9E%90"><span class="nav-text">接口分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E4%B8%AD%E5%BF%83"><span class="nav-text">个人中心</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="hua"
+      src="/./avatar/avatar.png">
+  <p class="site-author-name" itemprop="name">hua</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+      <!-- 标签云 -->
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width:100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ArrayList/" rel="tag">ArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ConcurrentHashMap/" rel="tag">ConcurrentHashMap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java%E9%9B%86%E5%90%88/" rel="tag">Java集合</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedList/" rel="tag">LinkedList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bug/" rel="tag">bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" rel="tag">代理模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" rel="tag">单例模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%91%BD%E4%BB%A4/" rel="tag">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" rel="tag">工厂模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" rel="tag">模板方法模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" rel="tag">策略模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/" rel="tag">装饰者模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" rel="tag">适配器模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%97%A8%E9%9D%A2%E6%A8%A1%E5%BC%8F/" rel="tag">门面模式</a><span class="tag-list-count">1</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2023016272号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hua</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
